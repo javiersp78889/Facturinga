@@ -4,11 +4,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly productRepository: Repository<User>,
+    private readonly sendMail : MailService
 
   ) { }
 
@@ -27,7 +29,6 @@ export class UsersService {
   }
   async create(createUserDto: CreateUserDto) {
     const { email, name } = createUserDto
-    console.log(createUserDto)
 
     const encontrar = await this.Verify(email, name)
 
@@ -35,6 +36,8 @@ export class UsersService {
     if (!encontrar) {
 
       const usuario = await this.productRepository.save(createUserDto)
+
+      await this.sendMail.sendMail(email, '123456')
       return usuario;
     } else {
 

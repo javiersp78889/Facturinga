@@ -7,11 +7,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { FacturaModule } from './factura/factura.module';
 import { ItemsModule } from './items/items.module';
+import { MailModule } from './mail/mail.module';
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), TypeOrmModule.forRootAsync({ useFactory: typeOrmConfig, inject: [ConfigService] }),
     UsersModule,
     FacturaModule,
-    ItemsModule
+    ItemsModule,
+    MailModule
   ],
   controllers: [AppController],
   providers: [AppService],
