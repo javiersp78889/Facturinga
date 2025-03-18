@@ -9,7 +9,7 @@ import { FacturaModule } from './factura/factura.module';
 import { ItemsModule } from './items/items.module';
 import { MailModule } from './mail/mail.module';
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), TypeOrmModule.forRootAsync({ useFactory: typeOrmConfig, inject: [ConfigService] }),
+  imports: [ConfigModule.forRoot({ isGlobal: true }), TypeOrmModule.forRootAsync({ useFactory: typeOrmConfig, inject: [ConfigService], imports: [ConfigModule] }),
     UsersModule,
     FacturaModule,
     ItemsModule,

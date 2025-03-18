@@ -11,7 +11,7 @@ export class User {
     email: string;
     @Column({ type: 'varchar', length: 200, default: 'default.svg' })
     image: string;
-    @Column({ type: 'varchar', length: 6, nullable: true })
+    @Column({ type: 'varchar', length: 6, default: null })
     token: string
     @Column({ type: 'boolean', nullable: true })
     auth: boolean
