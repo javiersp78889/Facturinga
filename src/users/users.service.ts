@@ -6,12 +6,15 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { MailService } from 'src/mail/mail.service';
 import { generateNumber } from 'src/utils/generateNumber';
+import { HashPass } from 'src/utils/Bcrypt';
+import { LoginService } from 'src/login/login.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    private readonly sendMail: MailService
+    private readonly sendMail: MailService,
+   
 
   ) { }
 
@@ -25,8 +28,9 @@ export class UsersService {
       return false;
     }
   }
+
   async create(createUserDto: CreateUserDto) {
-    const { email, name } = createUserDto
+    const { email, name, password } = createUserDto
 
     const encontrar = await this.Verify(email, name)
 
@@ -34,6 +38,7 @@ export class UsersService {
 
       const user = this.userRepository.create(createUserDto)
       const random = generateNumber()
+      user.password = await HashPass(password)
       user.token = random
 
       const usuario = await this.userRepository.save(user)

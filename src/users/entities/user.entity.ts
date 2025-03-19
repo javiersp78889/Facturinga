@@ -13,6 +13,8 @@ export class User {
     image: string;
     @Column({ type: 'varchar', length: 6, default: null })
     token: string
+    @Column({ type: 'varchar', length: 20, default: null })
+    gcode: string
     @Column({ type: 'boolean', nullable: true })
     auth: boolean
     @Column({ type: 'varchar', length: 100 })
