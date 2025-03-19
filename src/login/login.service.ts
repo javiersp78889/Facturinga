@@ -6,10 +6,13 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class LoginService {
-  constructor(private readonly configService: ConfigService, private readonly jwtService: JwtService) { }
+  constructor(private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
+    private readonly Advice: MailService) { }
   @InjectRepository(User) private readonly userRepository: Repository<User>
 
   async login(loginDto: LoginDto) {
@@ -26,13 +29,14 @@ export class LoginService {
 
     })
 
-
+    await this.Advice.aviso(email)
     return token;
   }
 
   async validate(token: string) {
     const valid = await this.jwtService.verify(token)
-    if(!valid)  throw new HttpException('Token inválido', HttpStatus.BAD_REQUEST);
+    if (!valid) throw new HttpException('Token inválido', HttpStatus.BAD_REQUEST);
+    return valid
   }
 
 }

@@ -10,7 +10,7 @@ export class MailService {
       await this.mailerService.sendMail({
         from: 'javiers78889@gmail.com',
         to: email,
-        subject: 'Verifique su Cuenta',
+        subject: 'FACTURINGA:Verifique su Cuenta',
         text: `tu codigo de verificacion ${token}`,
         html: `<p>Tu codigo de autenticacion ${token}</p>`
       })
@@ -25,9 +25,35 @@ export class MailService {
       await this.mailerService.sendMail({
         from: 'javiers78889@gmail.com',
         to: email,
-        subject: 'Cuenta Confirmada',
+        subject: 'FACTURINGA:Cuenta Confirmada',
         text: `Cuenta Confirmada`,
         html: `<p>Ahora puede iniciar Sesión</p>`
+      })
+    } catch (error) {
+      console.error('Error al enviar el correo:', error);
+    }
+
+
+  }
+  async aviso(email: string) {
+    try {
+      await this.mailerService.sendMail({
+        from: 'javiers78889@gmail.com',
+        to: email,
+        subject: 'FACTURINGA:Ha iniciado Sesión',
+        text: `Ha iniciado Sesión`,
+        html: `<p>Si ha sido usted puede ignorar este mensaje, de lo contrario cambie su contraseña</p><br/> 
+
+       <div style="text-align: center; background-color: #8b00ff">
+          <a href="https://www.404-code.com/" 
+            style="display: inline-block; background-color: #ff8f00; color: white; padding: 10px 20px; 
+                    text-decoration: none; border-radius: 5px;">
+            Change Password
+          </a>
+        </div>
+
+        
+        `
       })
     } catch (error) {
       console.error('Error al enviar el correo:', error);

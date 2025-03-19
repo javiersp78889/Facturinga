@@ -5,7 +5,7 @@ import { UpdateFacturaDto } from './dto/update-factura.dto';
 @Injectable()
 export class FacturaService {
   create(createFacturaDto: CreateFacturaDto) {
-    return 'This action adds a new factura';
+    return createFacturaDto;
   }
 
   findAll() {
