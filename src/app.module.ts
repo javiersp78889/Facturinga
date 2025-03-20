@@ -9,6 +9,7 @@ import { FacturaModule } from './factura/factura.module';
 import { ItemsModule } from './items/items.module';
 import { MailModule } from './mail/mail.module';
 import { LoginModule } from './login/login.module';
+import { JwtStrategy } from './auth/jwt.strategy';
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), TypeOrmModule.forRootAsync({ useFactory: typeOrmConfig, inject: [ConfigService], imports: [ConfigModule] }),
     UsersModule,
@@ -18,6 +19,6 @@ import { LoginModule } from './login/login.module';
     LoginModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule { }

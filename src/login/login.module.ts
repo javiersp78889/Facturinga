@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     inject: [ConfigService],  // Inyecta ConfigService
     useFactory: (configService: ConfigService) => ({
       secret: configService.get<string>('SECRETO'), // Obtiene la variable de entorno
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '3600s' },
     })
 
   })

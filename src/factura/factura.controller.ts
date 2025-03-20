@@ -1,20 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { FacturaService } from './factura.service';
 import { CreateFacturaDto } from './dto/create-factura.dto';
 import { UpdateFacturaDto } from './dto/update-factura.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('factura')
 export class FacturaController {
-  constructor(private readonly facturaService: FacturaService) {}
-
+  constructor(private readonly facturaService: FacturaService) { }
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createFacturaDto: CreateFacturaDto) {
-    return this.facturaService.create(createFacturaDto);
+  create(@Request() req, @Body() createFacturaDto: CreateFacturaDto) {
+    const userId = req.user?.id;
+    return this.facturaService.create(createFacturaDto, userId);
   }
 
   @Get()
-  findAll() {
-    return this.facturaService.findAll();
+  @UseGuards(JwtAuthGuard)
+  findAll(@Request() req) {
+    const id = req.user?.id;
+    return this.facturaService.findAll(id);
   }
 
   @Get(':id')

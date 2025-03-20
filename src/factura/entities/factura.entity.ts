@@ -14,6 +14,8 @@ export class Factura {
     cedula: string;
     @Column({ type: 'varchar', length: 200 })
     motivo: string;
+    @Column({ type: 'int'})
+    total: number;
     // Relación con User (Muchos a Uno)
     @ManyToOne(() => User, user => user.facturas, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userId' }) // Clave foránea en Factura
