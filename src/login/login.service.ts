@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from 'src/mail/mail.service';
+import { use } from 'passport';
 
 @Injectable()
 export class LoginService {
@@ -23,6 +24,7 @@ export class LoginService {
     if (!user) throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
 
     if (! await bcrypt.compare(password, user.password)) throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
+    if (!user.auth) throw new HttpException('Cuenta no Verificada', HttpStatus.CONFLICT)
 
     const token = await this.jwtService.signAsync({ id: user.id }, {
       secret: this.configService.get('SECRET'),
