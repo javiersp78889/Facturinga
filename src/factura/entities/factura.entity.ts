@@ -12,9 +12,11 @@ export class Factura {
     name: string;
     @Column({ type: 'varchar', length: 60 })
     cedula: string;
+    @Column({ type: 'varchar', length: 60, nullable: true , default:''})
+    email: string;
     @Column({ type: 'varchar', length: 200 })
     motivo: string;
-    @Column({ type: 'int'})
+    @Column({ type: 'int' })
     total: number;
     // Relación con User (Muchos a Uno)
     @ManyToOne(() => User, user => user.facturas, { onDelete: 'CASCADE' })

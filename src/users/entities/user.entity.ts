@@ -9,13 +9,17 @@ export class User {
     name: string;
     @Column({ type: 'varchar', length: 100, unique: true })
     email: string;
+    @Column({ type: 'varchar', length: 100, unique: true })
+    ruc: string;
     @Column({ type: 'varchar', length: 200, default: 'default.svg' })
     image: string;
-    @Column({ type: 'varchar', length: 6, default: null })
+    @Column({ type: 'varchar', length: 6, nullable: true })
     token: string
-    @Column({ type: 'varchar', length: 20, default: null })
-    gcode: string
-    @Column({ type: 'boolean', nullable: true })
+    @Column({ type: 'boolean', nullable: true, default: true })
+    membresia: boolean
+    @Column({ type: 'date', nullable: true })
+    expDate: Date
+    @Column({ type: 'boolean', nullable: true, default: false })
     auth: boolean
     @Column({ type: 'varchar', length: 100 })
     password: string;

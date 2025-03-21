@@ -8,21 +8,23 @@ import { MailService } from 'src/mail/mail.service';
 import { generateNumber } from 'src/utils/generateNumber';
 import { HashPass } from 'src/utils/Bcrypt';
 import { LoginService } from 'src/login/login.service';
+import { addDays, format } from 'date-fns';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly sendMail: MailService,
-   
+
 
   ) { }
 
-  async Verify(email: string, name: string) {
+  async Verify(email: string, name: string, ruc: string) {
     const usuario = await this.userRepository.findOne({ where: { name } })
     const correo = await this.userRepository.findOne({ where: { email } })
+    const identificacion = await this.userRepository.findOne({ where: { ruc } })
 
-    if (usuario || correo) {
+    if (usuario || correo || identificacion) {
       return true
     } else {
       return false;
@@ -30,9 +32,9 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const { email, name, password } = createUserDto
+    const { email, name, ruc, password } = createUserDto
 
-    const encontrar = await this.Verify(email, name)
+    const encontrar = await this.Verify(email, name, ruc)
 
     if (!encontrar) {
 
@@ -40,10 +42,14 @@ export class UsersService {
       const random = generateNumber()
       user.password = await HashPass(password)
       user.token = random
+      user.membresia = true
+      user.expDate = addDays(new Date(), 5)
 
-      const usuario = await this.userRepository.save(user)
+
+
+      await this.userRepository.save(user)
       await this.sendMail.create(email, user.token)
-      return usuario;
+      return { message: 'Cuenta creada' };
     } else {
 
       return 'Usuario en uso'

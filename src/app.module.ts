@@ -10,13 +10,17 @@ import { ItemsModule } from './items/items.module';
 import { MailModule } from './mail/mail.module';
 import { LoginModule } from './login/login.module';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { GeneratePdfModule } from './generate-pdf/generate-pdf.module';
+
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), TypeOrmModule.forRootAsync({ useFactory: typeOrmConfig, inject: [ConfigService], imports: [ConfigModule] }),
     UsersModule,
     FacturaModule,
     ItemsModule,
     MailModule,
-    LoginModule
+    LoginModule,
+    GeneratePdfModule,
+
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],

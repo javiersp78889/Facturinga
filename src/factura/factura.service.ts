@@ -7,6 +7,8 @@ import { User } from 'src/users/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Factura } from './entities/factura.entity';
 import { Item } from 'src/items/entities/item.entity';
+import { MailService } from 'src/mail/mail.service';
+import { GeneratePdfService } from 'src/generate-pdf/generate-pdf.service';
 
 
 @Injectable()
@@ -16,19 +18,22 @@ export class FacturaService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Factura) private readonly facturaRepository: Repository<Factura>,
     @InjectRepository(Item) private readonly itemRepository: Repository<Item>,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
+    private readonly mailService: MailService,
+    private readonly generatePdf: GeneratePdfService
 
   ) { }
+  
 
   async findUser(id: number) {
 
-    const find = await this.userRepository.findOne({ where: { id }, select: ['id', 'email', 'name'] })
+    const find = await this.userRepository.findOne({ where: { id }, select: ['id', 'email', 'name','ruc'] })
     if (!find) throw new NotFoundException('Usuario No encontrado')
     return find
 
   }
   async create(createFacturaDto: CreateFacturaDto, userId: number) {
-    const { name, cedula, motivo, items } = createFacturaDto;
+    const { name, cedula, motivo, items, email } = createFacturaDto;
     const usuario = await this.findUser(userId);
 
     const total = items.reduce((tot, n) => (n.price * n.quantity) + tot, 0);
@@ -43,6 +48,7 @@ export class FacturaService {
         name,
         cedula,
         motivo,
+        email,
         total,
         user: usuario
       });
@@ -57,6 +63,10 @@ export class FacturaService {
         });
 
         await queryRunner.manager.save(this.itemRepository.target, newItem);
+      }
+      if (email) {
+        const pdfUrl = await this.generatePdf.generatePDF(factura.id, createFacturaDto,usuario.ruc)
+        await this.mailService.factura(pdfUrl, email, usuario.name, `F-Nº-${factura.id}`)
       }
 
       // 3️⃣ Confirmar transacción

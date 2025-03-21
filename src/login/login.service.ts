@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from 'src/mail/mail.service';
 import { use } from 'passport';
+import { format, isAfter, isBefore } from 'date-fns';
 
 @Injectable()
 export class LoginService {
@@ -18,6 +19,7 @@ export class LoginService {
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto
+    const date = format(new Date, 'yyyy-MM-dd')
 
     const user = await this.userRepository.findOne({ where: { email } })
 
@@ -25,11 +27,14 @@ export class LoginService {
 
     if (! await bcrypt.compare(password, user.password)) throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
     if (!user.auth) throw new HttpException('Cuenta no Verificada', HttpStatus.CONFLICT)
+    if (!user.membresia) throw new HttpException('Cuenta suspendida, verifique su método de pago', HttpStatus.CONFLICT)
+    if (isAfter(new Date, user.expDate)) throw new HttpException('Cuenta suspendida, verifique su método de pago', HttpStatus.CONFLICT)
 
-    const token = await this.jwtService.signAsync({ id: user.id }, {
-      secret: this.configService.get('SECRET'),
 
-    })
+      const token = await this.jwtService.signAsync({ id: user.id }, {
+        secret: this.configService.get('SECRET'),
+
+      })
 
     await this.Advice.aviso(email)
     return token;

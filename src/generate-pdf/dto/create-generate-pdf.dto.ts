@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
-import { ArrayNotEmpty, IsArray, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsNumber, ValidateNested } from "class-validator";
+
 
 class ItemDto {
     @IsNotEmpty({ message: 'El nombre no puede ir vacio' })
@@ -15,22 +16,17 @@ class ItemDto {
 
 }
 
-
-
-export class CreateFacturaDto {
-
+export class CreateGeneratePdfDto {
+    
+    
     @IsNotEmpty({ message: 'El nombre no puede ir vacio' })
 
     name: string;
-
     @IsNotEmpty({ message: 'La cédula no puede ir vacio' })
+
     cedula: string;
-
-    @IsEmail()
-    @IsOptional()
-    email: string;
-
     @IsNotEmpty({ message: 'El motivo no puede ir vacio' })
+
     motivo: string;
 
     @IsArray()
@@ -38,6 +34,4 @@ export class CreateFacturaDto {
     @ValidateNested({ each: true })
     @Type(() => ItemDto)
     items:ItemDto[]
-
-
 }

@@ -4,6 +4,8 @@ import { IsEmail, IsNotEmpty, Length, min } from 'class-validator';
 export class CreateUserDto {
     @IsNotEmpty({ message: 'Nombre de la empresa es obligatorio' })
     name: string
+    @IsNotEmpty({ message: 'ruc de la empresa es obligatorio' })
+    ruc: string
     @IsNotEmpty({ message: 'El email es obligatorio es obligatorio' })
     @IsEmail()
     email: string

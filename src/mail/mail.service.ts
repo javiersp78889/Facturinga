@@ -27,7 +27,15 @@ export class MailService {
         to: email,
         subject: 'FACTURINGA:Cuenta Confirmada',
         text: `Cuenta Confirmada`,
-        html: `<p>Ahora puede iniciar Sesión</p>`
+        html: `<p>Ahora puede iniciar Sesión</p><br/> 
+
+       <div style="text-align: center; background-color: #8b00ff">
+          <a href="https://www.404-code.com/" 
+            style="display: inline-block; background-color: #ff8f00; color: white; padding: 10px 20px; 
+                    text-decoration: none; border-radius: 5px;">
+            Iniciar Sesión
+          </a>
+        </div>`
       })
     } catch (error) {
       console.error('Error al enviar el correo:', error);
@@ -54,6 +62,35 @@ export class MailService {
 
         
         `
+      })
+    } catch (error) {
+      console.error('Error al enviar el correo:', error);
+    }
+
+
+  }
+  async factura(pdfPath: string, email: string, name: string, documento: string) {
+    try {
+      console.log(email)
+      await this.mailerService.sendMail({
+        from: 'javiers78889@gmail.com',
+        to: email,
+        subject: 'FACTURINGA:Ha Recibido una factura',
+        text: `Ha Recibido una factura`,
+        html: `<p>Hola ${name}, aqui tiene su factura</p><br/> 
+
+        
+        `,
+        attachments: [
+          {
+            filename: `${documento}.pdf`,
+            path: pdfPath, // Ruta del archivo PDF
+            contentType: 'application/pdf',
+          },
+        ]
+
+
+
       })
     } catch (error) {
       console.error('Error al enviar el correo:', error);
