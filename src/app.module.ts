@@ -11,6 +11,7 @@ import { MailModule } from './mail/mail.module';
 import { LoginModule } from './login/login.module';
 import { JwtStrategy } from './auth/jwt.strategy';
 import { GeneratePdfModule } from './generate-pdf/generate-pdf.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), TypeOrmModule.forRootAsync({ useFactory: typeOrmConfig, inject: [ConfigService], imports: [ConfigModule] }),
@@ -20,6 +21,7 @@ import { GeneratePdfModule } from './generate-pdf/generate-pdf.module';
     MailModule,
     LoginModule,
     GeneratePdfModule,
+    CloudinaryModule,
 
   ],
   controllers: [AppController],

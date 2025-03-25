@@ -15,3 +15,9 @@ export class CreateUserDto {
     password: string
 
 }
+
+export class fileImageDto {
+    @IsNotEmpty({ message: 'La imagen no puede ir vacia' })
+    file: Express.Multer.File
+
+}
